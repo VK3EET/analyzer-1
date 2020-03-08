@@ -14,7 +14,7 @@ https://www.instructables.com/id/Improved-Arduino-Rotary-Encoder-Reading/
 Pressing and holding the encoder while starting launches the
 PC passthrough mode.
 
-The analyzer operates in the frequency range from 100kHz to 170 MHz.
+The analyzer operates in the frequency range from 100kHz to 230 MHz.
 The operating frequency is set by rotating the encoder. 
 Measurement is started by pressing and then releasing the encoder knob once.
 One click of the encoder turn changes the frequency by 10 kHz,
@@ -32,7 +32,7 @@ from the SimonM83 example found at Instructables. This encoder code looks for a
 rising edge to indicate that the encoder has arrived at a detent, rather than simply
 looking for changes.
 
-Hardware tested with:
+Tested with:
 Arduino Uno clone, unbranded.
 RigExpert AA-30.ZERO
 2004 I2C LCD
@@ -40,10 +40,11 @@ Rotary encoder, Jaycar catalogue number XC3736
 
 
 To do:
-  um, lots? 
+  um, lots? This was just a quick-and-dirty hack to get something functional
+  with the hardware I had on hand.
 
 Version History:
-(still pre-release)
+0.01  20200308
 
 */
 
@@ -53,7 +54,7 @@ Version History:
 #include <LiquidCrystal_I2C.h>
 
 /* Display setting. Address I2C, number of columns, number of rows. */
-//adjust I2C address to suit your device.
+//adjust I2C address and parameters to suit your device - this is for a 2004 at 0x3F
 LiquidCrystal_I2C lcd(0x3F, 20, 4);
 
 /* Added a library to work with AA-30 ZERO analyzer */
@@ -123,7 +124,7 @@ void setup() {
   //lcd.setCursor(0, 1);
   //lcd.print("  antenna analyzer  ");
   lcd.setCursor(0, 2);
-  lcd.print("  (press and hold   ");
+  lcd.print(" (press+hold encoder");
   lcd.setCursor(0, 3);
   lcd.print(" switch for PC mode)");
   //lcd.print("--------------------");
@@ -259,10 +260,14 @@ void updateScreen () {
 
   Of course, *way* outside the nominal range, results are not likely to be 
   terribly reliable or consistent for real loads that are far from 50 ohms.
+  My testing into known 2m antennas showed comparable results to other
+  instruments, but the results at 70cm weren't believable. 
+  
   This display code should work from 10kHz through 999.999MHz to facilitate
-  experimentation and testing. UR4MCB stated in a post in a qrz.com forum
-  that the device should be good to 170MHz, but that things may get a little
-  hairy in a few places outside the amateur bands. 
+  experimentation, testing, and re-use. UR4MCB stated in a post in a qrz.com
+  forum that the device should be good to 230MHz, but that things may get a
+  little hairy in a few places outside the amateur bands with spurs at 112 and
+  150 MHz - https://forums.qrz.com/index.php?threads/a-little-more-about-the-aa-30-zero-from-rigexpert.691567/ 
 */
   if (millis() - timer > 200) {
     if ((freq / 1000) > 100000) {   //values above 100MHz
@@ -324,8 +329,8 @@ if ( (freq / 1000) < 100 ) {   //values below 1MHz
 
 void freq_leftH () {
   freq = freq + 1000000;
-  if (freq >= 170000000) {
-    freq = 170000000;
+  if (freq >= 230000000) {
+    freq = 230000000;
   }
 }
 
@@ -338,8 +343,8 @@ void freq_rightH () {
 
 void freq_left () {
   freq = freq + 10000;
-  if (freq >= 170000000) {
-    freq = 170000000;
+  if (freq >= 230000000) {
+    freq = 230000000;
   }
 }
 
