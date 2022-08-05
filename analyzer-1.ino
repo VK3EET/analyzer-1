@@ -44,6 +44,7 @@ To do:
   with the hardware I had on hand.
 
 Version History:
+0.01.1 -   20220805 - keep-alive edit - https://www.theregister.com/2022/08/04/gitlab_data_retention_policy/
 0.01  20200308
 
 */
